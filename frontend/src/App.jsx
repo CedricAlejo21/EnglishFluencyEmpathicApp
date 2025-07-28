@@ -464,6 +464,70 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* New Metrics: Vocabulary Diversity, Grammar Errors, Sentence Complexity */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                      {/* Vocabulary Diversity */}
+                      <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200 group relative">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            <BarChart3 className="w-5 h-5 text-indigo-600" />
+                            <span className="ml-2 text-2xl font-bold text-indigo-900">
+                              {typeof result.vocab_diversity === 'number' ? result.vocab_diversity.toFixed(2) : '--'}
+                            </span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400 hover:text-indigo-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-56 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              Measures the range of unique words used. Higher values indicate richer vocabulary, as valued in TOEFL, IELTS, and PTE.
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-indigo-700 font-medium">Vocabulary Diversity</p>
+                      </div>
+                      {/* Grammar Errors */}
+                      <div className="bg-rose-50 rounded-xl p-4 border border-rose-200 group relative">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            <AlertTriangle className="w-5 h-5 text-rose-600" />
+                            <span className="ml-2 text-2xl font-bold text-rose-900">
+                              {typeof result.grammar_errors === 'number' ? result.grammar_errors : '--'}
+                            </span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-rose-400 hover:text-rose-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-56 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              The number of possible grammar mistakes detected in your transcript. Fewer errors mean higher grammatical accuracy, as scored in international English tests.
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-rose-700 font-medium">Grammar Errors</p>
+                      </div>
+                      {/* Sentence Complexity */}
+                      <div className="bg-teal-50 rounded-xl p-4 border border-teal-200 group relative">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            <FileText className="w-5 h-5 text-teal-600" />
+                            <span className="ml-2 text-2xl font-bold text-teal-900">
+                              {typeof result.avg_sentence_length === 'number' ? result.avg_sentence_length.toFixed(1) : '--'}
+                            </span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-teal-400 hover:text-teal-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-56 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              The average length of your sentences (words per sentence). Moderate to longer sentences show more advanced fluency, as in PTE, IELTS, and TOEFL.
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-teal-700 font-medium">Sentence Complexity</p>
+                      </div>
+                    </div>
+
                     {/* Transcript */}
                     {result.transcript && (
                       <div className="space-y-3">

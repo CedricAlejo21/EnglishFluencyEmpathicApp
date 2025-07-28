@@ -7,6 +7,7 @@ import re
 import librosa
 import numpy as np
 import whisper
+import language_tool_python
 
 app = FastAPI()
 
@@ -68,6 +69,21 @@ async def analyze_fluency(file: UploadFile = File(...)):
         os.remove(tmp_path)
         os.remove(wav_path)
         return {"error": f"Speech recognition failed: {str(e)}"}
+
+    # Vocabulary Diversity (type-token ratio)
+    tokens = [w for w in re.findall(r'\b\w+\b', text.lower()) if w.isalpha()]
+    unique_tokens = set(tokens)
+    vocab_diversity = len(unique_tokens) / len(tokens) if tokens else 0
+
+    # Grammar Error Count
+    tool = language_tool_python.LanguageTool('en-US')
+    grammar_matches = tool.check(text)
+    grammar_errors = len(grammar_matches)
+
+    # Sentence Complexity (average sentence length)
+    sentences = re.split(r'[.!?]', text)
+    sentence_lengths = [len(s.split()) for s in sentences if s.strip()]
+    avg_sentence_length = float(np.mean(sentence_lengths)) if sentence_lengths else 0
 
     # Calculate words per minute
     word_count = len(text.split())
@@ -133,6 +149,23 @@ async def analyze_fluency(file: UploadFile = File(...)):
     else:
         feedbacks.append("Good use of linking words for coherence!")
 
+    if vocab_diversity < 0.4:
+        feedbacks.append("Try to use a wider range of vocabulary to improve your lexical resource (as in TOEFL/IELTS rubrics).")
+    else:
+        feedbacks.append("Good range of vocabulary used!")
+
+    if grammar_errors > 3:
+        feedbacks.append(f"{grammar_errors} possible grammar issues detected. Review your sentences for grammatical accuracy.")
+    else:
+        feedbacks.append("Few grammar issues detected. Well done!")
+
+    if avg_sentence_length < 8:
+        feedbacks.append("Try to use longer or more complex sentences for higher fluency scores (IELTS/PTE).")
+    elif avg_sentence_length > 20:
+        feedbacks.append("Some sentences are quite long. Ensure clarity and avoid run-ons.")
+    else:
+        feedbacks.append("Good sentence structure and complexity.")
+
     # Clean up temp files
     os.remove(tmp_path)
     os.remove(wav_path)
@@ -149,5 +182,8 @@ async def analyze_fluency(file: UploadFile = File(...)):
         "color": color,
         "transcript": text,
         "used_linkers": list(used_linkers),
-        "total_silence_sec": round(total_silence / sr_, 2)
+        "total_silence_sec": round(total_silence / sr_, 2),
+        "vocab_diversity": round(vocab_diversity, 3),
+        "grammar_errors": grammar_errors,
+        "avg_sentence_length": round(avg_sentence_length, 1)
     } 

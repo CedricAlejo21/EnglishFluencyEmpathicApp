@@ -8,11 +8,26 @@ A modern web app to analyze and improve your English speaking fluency. Get insta
 
 - **Upload or Record Speech**: Supports browser microphone selection and audio file upload.
 - **Fluency Metrics**: Analyzes speech rate (WPM), pauses, filler words, and coherence (linking words).
+  - **Vocabulary Diversity**: Measures the range of unique words you use (type-token ratio), a key factor in TOEFL, IELTS, and PTE scoring.
+  - **Grammar Error Detection**: Instantly spots possible grammar mistakes in your transcript, as assessed in global English tests.
+  - **Sentence Complexity**: Provides feedback on your average sentence length, reflecting your ability to use complex sentences as in IELTS and PTE.
 - **CEFR Rating**: Maps your fluency to the international CEFR scale (A1–C2).
 - **Personalized Recommendations**: Actionable, color-coded feedback to help you improve.
 - **Modern UI**: Beautiful, responsive, and accessible interface with vibrant gradients and clear visual cues.
 - **Tooltips & Explanations**: Hover over info icons to learn what each metric means.
 - **Preview & Troubleshooting**: Listen to your recording before analyzing; get clear troubleshooting tips if something doesn’t work.
+
+---
+
+## 📚 Future Recommendations (Rubric-Based Features)
+
+- **Automated Pronunciation Scoring:** Integrate advanced ASR or third-party APIs to assess pronunciation, as done in Versant and PTE.
+- **Full Band Scoring:** Map user performance to band descriptors used in IELTS and TOEFL for more granular proficiency feedback.
+- **Task Response & Content:** Evaluate how well users address prompts or questions, similar to IELTS speaking tasks.
+- **Pronunciation, Grammar, and Lexical Resource:** Expand feedback to cover all rubric areas from international English tests.
+- **Adopt Criteria from Versant, TOEFL, IELTS, and Pearson Test of English:** Continue research and implementation to align with these global standards for spoken English assessment.
+
+*Contributions and suggestions from English educators and assessment experts are highly welcome!*
 
 ---
 

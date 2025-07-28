@@ -8,3 +8,4 @@ torch
 datasets
 pydantic
 openai-whisper 
+language-tool-python
