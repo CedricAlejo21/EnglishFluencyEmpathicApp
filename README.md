@@ -17,7 +17,7 @@ A modern web app to analyze and improve your English speaking fluency. Get insta
 ### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
-cd EMPATHY
+cd EnglishFluencyEmpathicApp
 ```
 
 ### 2. Backend Setup (FastAPI + Python)
