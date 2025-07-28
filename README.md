@@ -1,102 +1,126 @@
-# English Speaking Fluency Analyzer
+# HueSpeak – English Speaking Fluency Analyzer
 
-A modern web app to analyze and improve your English speaking fluency. Get instant feedback on speech rate, pauses, fillers, coherence, and more!
+A modern web app to analyze and improve your English speaking fluency. Get instant, actionable feedback on speech rate, pauses, fillers, coherence, CEFR rating, and more!
 
 ---
 
 ## 🚀 Features
-- Upload or record your speech (browser mic selection supported)
-- Speech rate (WPM), pause, filler, and coherence analysis
-- Color-coded, actionable feedback and CEFR scoring
-- Beautiful, responsive, and accessible UI
+
+- **Upload or Record Speech**: Supports browser microphone selection and audio file upload.
+- **Fluency Metrics**: Analyzes speech rate (WPM), pauses, filler words, and coherence (linking words).
+- **CEFR Rating**: Maps your fluency to the international CEFR scale (A1–C2).
+- **Personalized Recommendations**: Actionable, color-coded feedback to help you improve.
+- **Modern UI**: Beautiful, responsive, and accessible interface with vibrant gradients and clear visual cues.
+- **Tooltips & Explanations**: Hover over info icons to learn what each metric means.
+- **Preview & Troubleshooting**: Listen to your recording before analyzing; get clear troubleshooting tips if something doesn’t work.
 
 ---
 
-## 🖥️ Local Setup Instructions
+## 🖼️ Screenshot
+
+> ![alt text](image.png)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React, Vite, Tailwind CSS, Lucide Icons, Chart.js, Framer Motion
+- **Backend**: FastAPI (Python), Whisper (speech-to-text), librosa (audio analysis)
+- **Other**: Node.js, npm, ffmpeg (audio conversion)
+
+---
+
+## ⚡ Quick Start
 
 ### 1. Clone the Repository
+
 ```bash
 git clone "https://github.com/CedricAlejo21/EnglishFluencyEmpathicApp.git"
 cd EnglishFluencyEmpathicApp
 ```
 
 ### 2. Backend Setup (FastAPI + Python)
-#### a. Install Python 3.9+ (if not already installed)
-- [Download Python](https://www.python.org/downloads/)
 
-#### b. Create a virtual environment (optional but recommended)
-```bash
-python -m venv venv
-# Activate:
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-```
-
-#### c. Install backend dependencies
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-#### d. Install ffmpeg (required for audio conversion)
-- [Download ffmpeg](https://ffmpeg.org/download.html) and add it to your system PATH.
-- To check if installed: `ffmpeg -version`
-
-#### e. Run the backend server
-```bash
-python -m uvicorn app.main:app --reload
-```
-- The API will be available at [http://localhost:8000](http://localhost:8000)
-
----
+- **Install Python 3.9+**: [Download Python](https://www.python.org/downloads/)
+- **Create and activate a virtual environment:**
+  ```bash
+  python -m venv venv
+  # Windows:
+  venv\Scripts\activate
+  # Mac/Linux:
+  source venv/bin/activate
+  ```
+- **Install dependencies:**
+  ```bash
+  cd backend
+  pip install -r requirements.txt
+  ```
+- **Install ffmpeg**: [Download ffmpeg](https://ffmpeg.org/download.html) and add it to your system PATH.
+  - To check: `ffmpeg -version`
+- **Run the backend:**
+  ```bash
+  python -m uvicorn app.main:app --reload
+  ```
+  - API runs at [http://localhost:8000](http://localhost:8000)
 
 ### 3. Frontend Setup (React + Vite)
-#### a. Install Node.js (if not already installed)
-- [Download Node.js](https://nodejs.org/)
 
-#### b. Install frontend dependencies
-```bash
-cd ../frontend
-npm install
-```
-
-#### c. Run the frontend dev server
-```bash
-npm run dev
-```
-- The app will be available at [http://localhost:5173](http://localhost:5173)
+- **Install Node.js**: [Download Node.js](https://nodejs.org/)
+- **Install dependencies:**
+  ```bash
+  cd ../frontend
+  npm install
+  ```
+- **Run the frontend:**
+  ```bash
+  npm run dev
+  ```
+  - App runs at [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 🛠️ Troubleshooting
-- **CORS errors?** Make sure the backend is running and accessible at `localhost:8000`.
-- **ffmpeg not found?** Ensure ffmpeg is installed and in your PATH.
-- **Microphone not detected?** Click "Show Microphones" and allow browser mic access.
-- **Audio not analyzed?** Only `.wav`, `.webm`, or `.ogg` files are supported for upload/recording.
+## 🌟 Usage
+
+- **Record or upload** your speech.
+- **Preview** your audio before analysis.
+- Click **Analyze Fluency** and view:
+  - Overall assessment
+  - CEFR rating
+  - Words per minute, pauses, fillers, coherence links
+  - Transcript and personalized recommendations
+- **Hover** over info icons for explanations.
+- **Troubleshooting**: See below if you run into issues.
 
 ---
 
-## 🌐 Deployment (GitHub Pages, Vercel, Netlify, etc.)
-- **Frontend:**
-  - Build with `npm run build` in `frontend/`.
-  - Deploy the `dist/` folder to Vercel, Netlify, or GitHub Pages (for static hosting).
-- **Backend:**
-  - Deploy the FastAPI app to a cloud service (e.g., Heroku, Render, AWS, etc.).
-  - Make sure to set CORS to allow your frontend domain.
+## 🔧 Troubleshooting
+
+- **CORS errors?** Backend must run at `localhost:8000`.
+- **ffmpeg not found?** Ensure it’s installed and in your PATH.
+- **Mic not detected?** Click “Show Microphones” and allow browser mic access.
+- **Audio not analyzed?** Only `.wav`, `.webm`, or `.ogg` files are supported.
+
+---
+
+## 🌐 Deployment
+
+- **Frontend**: Build with `npm run build` in `frontend/`, deploy `dist/` to Vercel, Netlify, or GitHub Pages.
+- **Backend**: Deploy FastAPI app to Heroku, Render, AWS, etc. Set CORS for your frontend domain.
 
 ---
 
 ## 📄 License
+
 MIT
 
 ---
 
 ## 👥 Authors
-- Your Team Names Here
+
+- Cedric Alejo & Team
 
 ---
 
 ## 🤝 Contributions
-PRs and issues welcome! 
+
+PRs and issues welcome!

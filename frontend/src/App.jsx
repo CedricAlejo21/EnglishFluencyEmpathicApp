@@ -14,6 +14,7 @@ import {
   Clock,
   MessageCircle,
   Link,
+  Bot,
   FileText
 } from 'lucide-react';
 
@@ -163,41 +164,39 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white/95 backdrop-blur-md border-b border-indigo-200/50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Fluency Analyzer</h1>
-                <p className="text-sm text-gray-500">Improve your English speaking skills</p>
+                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg ring-2 ring-indigo-200/50">
+                  <img src="/favicon.svg" alt="HueSpeak Logo" className="w-full h-full object-cover" />
+                </div>
+              <div className="flex flex-col items-start">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none mb-0">HueSpeak</h1>
+                <p className="text-sm text-gray-600 mt-0">Improve your English speaking skills</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <Settings className="w-4 h-4" />
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <Bot className="w-6 h-6 text-indigo-500" />
               <span>Powered by OpenAI Whisper</span>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Left Column - Input */}
-          <div className="lg:col-span-1 space-y-6">
-            
-            {/* Upload/Record Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="lg:col-span-1">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-indigo-200/50 overflow-hidden">
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Get Started</h2>
                 
                 {/* Tab Navigation */}
-                <div className="flex rounded-lg bg-gray-100 p-1 mb-6">
+                <div className="flex rounded-lg bg-gradient-to-r from-purple-100 to-blue-100 p-1 mb-6">
                   <button
                     onClick={() => setActiveTab('upload')}
                     className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
@@ -337,9 +336,9 @@ export default function App() {
 
           {/* Right Column - Results */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 min-h-[600px]">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-indigo-200/50 min-h-[600px]">
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Analysis Results</h2>
+                <h2 className="text-xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Analysis Results</h2>
                 
                 {result ? (
                   <div className="space-y-8">
@@ -347,24 +346,44 @@ export default function App() {
                     {/* Score Overview */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className={`p-4 rounded-xl border ${getFluencyStatus(result.color).color}`}>
-                        <div className="flex items-center space-x-3">
-                          {(() => {
-                            const StatusIcon = getFluencyStatus(result.color).icon;
-                            return <StatusIcon className="w-5 h-5" />;
-                          })()}
-                          <div>
-                            <p className="font-medium">{getFluencyStatus(result.color).text}</p>
-                            <p className="text-sm opacity-80">Overall Assessment</p>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-3">
+                            {(() => {
+                              const StatusIcon = getFluencyStatus(result.color).icon;
+                              return <StatusIcon className="w-5 h-5" />;
+                            })()}
+                            <div>
+                              <p className="font-medium">{getFluencyStatus(result.color).text}</p>
+                              <p className="text-sm opacity-80">Overall Assessment</p>
+                            </div>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-64 p-3 bg-white rounded-lg shadow-lg border border-gray-200 text-sm text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              This is an overall assessment of your English fluency based on multiple factors including speech rate, pauses, and filler words. It gives you a quick understanding of your current speaking level.
+                            </div>
                           </div>
                         </div>
                       </div>
                       
                       <div className={`p-4 rounded-xl border ${getScoreColor(result.cefr_level)}`}>
-                        <div className="flex items-center space-x-3">
-                          <TrendingUp className="w-5 h-5" />
-                          <div>
-                            <p className="font-medium">{result.cefr_level} Level</p>
-                            <p className="text-sm opacity-80">CEFR Rating</p>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-3">
+                            <TrendingUp className="w-5 h-5" />
+                            <div>
+                              <p className="font-medium">{result.cefr_level} Level</p>
+                              <p className="text-sm opacity-80">CEFR Rating</p>
+                            </div>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-64 p-3 bg-white rounded-lg shadow-lg border border-gray-200 text-sm text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              CEFR (Common European Framework of Reference) is an international standard for describing language ability. Levels range from A1 (beginner) to C2 (proficient). This rating helps you understand your English proficiency in a globally recognized format.
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -372,34 +391,74 @@ export default function App() {
 
                     {/* Metrics Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                      <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                      <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 group relative">
                         <div className="flex items-center justify-between mb-2">
-                          <Clock className="w-5 h-5 text-blue-600" />
-                          <span className="text-2xl font-bold text-blue-900">{result.speech_rate_wpm}</span>
+                          <div className="flex items-center">
+                            <Clock className="w-5 h-5 text-blue-600" />
+                            <span className="ml-2 text-2xl font-bold text-blue-900">{result.speech_rate_wpm}</span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-400 hover:text-blue-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-48 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              The average number of words you speak per minute. Native speakers typically range between 120-150 WPM for clear communication.
+                            </div>
+                          </div>
                         </div>
                         <p className="text-sm text-blue-700 font-medium">Words per Minute</p>
                       </div>
                       
-                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200 group relative">
                         <div className="flex items-center justify-between mb-2">
-                          <AlertTriangle className="w-5 h-5 text-amber-600" />
-                          <span className="text-2xl font-bold text-amber-900">{result.pauses}</span>
+                          <div className="flex items-center">
+                            <AlertTriangle className="w-5 h-5 text-amber-600" />
+                            <span className="ml-2 text-2xl font-bold text-amber-900">{result.pauses}</span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-400 hover:text-amber-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-48 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              The number of noticeable pauses in your speech. While some pauses are natural, too many can make your speech sound hesitant or unprepared.
+                            </div>
+                          </div>
                         </div>
                         <p className="text-sm text-amber-700 font-medium">Pauses</p>
                       </div>
                       
-                      <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                      <div className="bg-red-50 rounded-xl p-4 border border-red-200 group relative">
                         <div className="flex items-center justify-between mb-2">
-                          <MessageCircle className="w-5 h-5 text-red-600" />
-                          <span className="text-2xl font-bold text-red-900">{result.filler_count}</span>
+                          <div className="flex items-center">
+                            <MessageCircle className="w-5 h-5 text-red-600" />
+                            <span className="ml-2 text-2xl font-bold text-red-900">{result.filler_count}</span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-400 hover:text-red-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-48 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              Words or sounds like 'um', 'uh', 'like', or 'you know' that don't add meaning. Occasional use is normal, but excessive fillers can make speech less clear.
+                            </div>
+                          </div>
                         </div>
                         <p className="text-sm text-red-700 font-medium">Filler Words</p>
                       </div>
                       
-                      <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                      <div className="bg-green-50 rounded-xl p-4 border border-green-200 group relative">
                         <div className="flex items-center justify-between mb-2">
-                          <Link className="w-5 h-5 text-green-600" />
-                          <span className="text-2xl font-bold text-green-900">{result.coherence_count}</span>
+                          <div className="flex items-center">
+                            <Link className="w-5 h-5 text-green-600" />
+                            <span className="ml-2 text-2xl font-bold text-green-900">{result.coherence_count}</span>
+                          </div>
+                          <div className="group relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-400 hover:text-green-600 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 w-48 p-2 bg-white rounded-lg shadow-lg border border-gray-200 text-xs text-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                              The number of logical connections between your ideas. Higher values indicate better flow and organization in your speech.
+                            </div>
+                          </div>
                         </div>
                         <p className="text-sm text-green-700 font-medium">Coherence Links</p>
                       </div>
@@ -440,8 +499,10 @@ export default function App() {
                             const Icon = isPositive ? CheckCircle : isWarning ? AlertTriangle : Lightbulb;
                             
                             return (
-                              <div key={i} className={`flex items-start space-x-3 p-4 rounded-xl border ${colorClass}`}>
-                                <Icon className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                              <div key={i} className={`flex items-center space-x-3 p-4 rounded-xl border ${colorClass}`}>
+                                <div className="flex-shrink-0">
+                                  <Icon className="w-5 h-5" />
+                                </div>
                                 <p className="text-sm font-medium leading-relaxed">{tip}</p>
                               </div>
                             );
@@ -463,7 +524,7 @@ export default function App() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
