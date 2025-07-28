@@ -7,25 +7,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Poppins", "Inter", "ui-sans-serif", "system-ui"],
-        heading: ["Poppins", "Inter", "ui-sans-serif", "system-ui"],
+        'inter': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        primary: {
-          DEFAULT: '#2563eb', // blue-600
-          light: '#60a5fa', // blue-400
-          dark: '#1e40af', // blue-800
+        blue: {
+          500: '#3b82f6', // Ensure this color is defined
         },
-        accent: {
-          DEFAULT: '#22d3ee', // cyan-400
-          light: '#67e8f9', // cyan-300
-        },
-        card: '#f8fafc', // slate-50
-      },
-      boxShadow: {
-        magic: '0 8px 32px 0 rgba(34,211,238,0.15), 0 1.5px 4px 0 rgba(37,99,235,0.10)',
-      },
+      }
     },
   },
   plugins: [],
-} 
+}

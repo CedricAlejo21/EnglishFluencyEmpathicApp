@@ -1,3 +1,5 @@
 /backend/Scripts
 /backend/Lib
 /node_modules
+/frontend/node_modules
+/backend/app/__pycache__

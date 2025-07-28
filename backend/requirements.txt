@@ -2,9 +2,9 @@ fastapi
 uvicorn[standard]
 python-multipart
 librosa
-SpeechRecognition
 scikit-learn
 transformers
 torch
 datasets
-pydantic 
+pydantic
+openai-whisper 

@@ -1,24 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaMicrophone, FaStop, FaUpload, FaHeadphones, FaWaveSquare, FaCheckCircle, FaExclamationTriangle, FaLightbulb } from 'react-icons/fa';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { 
+  Mic, 
+  Square, 
+  Upload, 
+  Play, 
+  CheckCircle, 
+  AlertTriangle, 
+  Lightbulb, 
+  BarChart3,
+  FileAudio,
+  Settings,
+  TrendingUp,
+  Clock,
+  MessageCircle,
+  Link,
+  FileText
+} from 'lucide-react';
 
-const COLORFUL_BG = (
-  <svg className="absolute -z-10 top-0 left-0 w-full h-full" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="1200" cy="100" rx="340" ry="120" fill="#a5b4fc" fillOpacity="0.45" />
-    <ellipse cx="300" cy="800" rx="400" ry="140" fill="#fbcfe8" fillOpacity="0.35" />
-    <ellipse cx="200" cy="200" rx="180" ry="80" fill="#fef08a" fillOpacity="0.25" />
-    <ellipse cx="1200" cy="700" rx="220" ry="90" fill="#6ee7b7" fillOpacity="0.18" />
-    <ellipse cx="700" cy="400" rx="300" ry="120" fill="#f472b6" fillOpacity="0.10" />
-  </svg>
-);
-
-const colorMap = {
-  red: 'bg-red-100 text-red-700 border-red-300',
-  yellow: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-  green: 'bg-green-100 text-green-700 border-green-300',
-};
-
-function App() {
+export default function App() {
   const [file, setFile] = useState(null);
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
@@ -28,6 +27,7 @@ function App() {
   const [devices, setDevices] = useState([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [micPermission, setMicPermission] = useState(false);
+  const [activeTab, setActiveTab] = useState('upload');
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
@@ -53,13 +53,10 @@ function App() {
     }).catch(() => {});
   }, []);
 
-  // For react-speech-recognition (text only, not audio)
-  const { transcript, resetTranscript } = useSpeechRecognition();
-
   // Handle file upload (audio only)
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
-    setAudioURL(null); // Clear any previous recording
+    setAudioURL(null);
     setResult(null);
   };
 
@@ -69,7 +66,6 @@ function App() {
     setResult(null);
     let audioToSend = file;
     if (!audioToSend && audioURL) {
-      // Convert audioURL to Blob
       const response = await fetch(audioURL);
       const blob = await response.blob();
       audioToSend = new File([blob], 'recording.wav', { type: blob.type });
@@ -98,11 +94,10 @@ function App() {
 
   // Recording logic using MediaRecorder API
   const handleStartRecording = async () => {
-    setFile(null); // Clear file input
+    setFile(null);
     setAudioURL(null);
     setResult(null);
     setRecording(true);
-    resetTranscript();
     try {
       const constraints = {
         audio: {
@@ -149,148 +144,326 @@ function App() {
     }
   };
 
-  // --- UI ---
+  const getScoreColor = (cefr) => {
+    switch(cefr) {
+      case 'C2': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      case 'C1': return 'text-green-600 bg-green-50 border-green-200';
+      case 'B2': return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'B1': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      default: return 'text-orange-600 bg-orange-50 border-orange-200';
+    }
+  };
+
+  const getFluencyStatus = (color) => {
+    switch(color) {
+      case 'green': return { text: 'Excellent Fluency', icon: CheckCircle, color: 'text-emerald-600 bg-emerald-50 border-emerald-200' };
+      case 'yellow': return { text: 'Good Progress', icon: TrendingUp, color: 'text-amber-600 bg-amber-50 border-amber-200' };
+      default: return { text: 'Needs Practice', icon: AlertTriangle, color: 'text-red-600 bg-red-50 border-red-200' };
+    }
+  };
+
   return (
-    <div className="relative min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-blue-50 to-yellow-50 overflow-x-hidden font-sans">
-      {COLORFUL_BG}
-      {/* Hero Section */}
-      <header className="w-full py-10 px-4 flex flex-col items-center text-center bg-transparent">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-primary drop-shadow mb-4 tracking-tight flex items-center justify-center gap-3">
-            <FaWaveSquare className="text-pink-400 animate-pulse" />
-            SpeakFluent
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-700 font-semibold mb-4">
-            Analyze your English speaking fluency in seconds. Get instant, actionable feedback!
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Fluency Analyzer</h1>
+                <p className="text-sm text-gray-500">Improve your English speaking skills</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <Settings className="w-4 h-4" />
+              <span>Powered by OpenAI Whisper</span>
+            </div>
+          </div>
         </div>
       </header>
-      {/* Main Card */}
-      <main className="flex-1 flex items-center justify-center py-4 px-2">
-        <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
-          {/* Left: Upload/Record */}
-          <section className="md:w-1/2 w-full bg-white/80 shadow-2xl rounded-3xl p-8 flex flex-col gap-6 border border-blue-200 backdrop-blur-lg">
-            <h2 className="text-2xl font-bold text-pink-500 flex items-center gap-2 mb-2"><FaMicrophone /> Upload or Record</h2>
-            <label className="block">
-              <span className="block text-blue-700 font-semibold mb-1">Upload Audio File</span>
-              <div className="flex items-center gap-3">
-                <input
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleFileChange}
-                  className="block w-full text-sm text-blue-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-100 file:text-blue-700 hover:file:bg-pink-200 transition"
-                />
-                <span className="inline-flex items-center gap-1 text-pink-400 font-semibold"><FaUpload /> Audio</span>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Left Column - Input */}
+          <div className="lg:col-span-1 space-y-6">
+            
+            {/* Upload/Record Card */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Get Started</h2>
+                
+                {/* Tab Navigation */}
+                <div className="flex rounded-lg bg-gray-100 p-1 mb-6">
+                  <button
+                    onClick={() => setActiveTab('upload')}
+                    className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                      activeTab === 'upload' 
+                        ? 'bg-white text-gray-900 shadow-sm' 
+                        : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>Upload</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('record')}
+                    className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                      activeTab === 'record' 
+                        ? 'bg-white text-gray-900 shadow-sm' 
+                        : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    <Mic className="w-4 h-4" />
+                    <span>Record</span>
+                  </button>
+                </div>
+
+                {/* Upload Tab */}
+                {activeTab === 'upload' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Choose Audio File
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleFileChange}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                        />
+                      </div>
+                      {file && (
+                        <div className="mt-3 flex items-center space-x-2 text-sm text-gray-600">
+                          <FileAudio className="w-4 h-4" />
+                          <span className="truncate">{file.name}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Record Tab */}
+                {activeTab === 'record' && (
+                  <div className="space-y-4">
+                    {!micPermission && (
+                      <button
+                        onClick={getMicrophones}
+                        className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span>Enable Microphone</span>
+                      </button>
+                    )}
+                    
+                    {devices.length > 0 && (
+                      <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Microphone
+                      </label>
+                      <select
+                        value={selectedDeviceId}
+                        onChange={(e) => setSelectedDeviceId(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        {devices.map((device) => (
+                          <option key={device.deviceId} value={device.deviceId}>
+                            {device.label || `Microphone ${device.deviceId.slice(0, 8)}`}
+                          </option>
+                        ))}
+                      </select>
+                      </div>
+                    )}
+
+                    <div className="flex space-x-3">
+                      {!recording ? (
+                        <button
+                          onClick={handleStartRecording}
+                          disabled={!micPermission}
+                          className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <Mic className="w-4 h-4" />
+                          <span>Start Recording</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleStopRecording}
+                          className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                          <Square className="w-4 h-4" />
+                          <span>Stop Recording</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {audioURL && (
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Preview Recording
+                        </label>
+                        <audio controls src={audioURL} className="w-full" />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Analyze Button */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={loading || (!file && !audioURL)}
+                    className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Analyzing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <BarChart3 className="w-4 h-4" />
+                        <span>Analyze Fluency</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            </label>
-            <div className="flex flex-col items-center gap-2">
-              <span className="block text-blue-700 font-semibold">Or record directly:</span>
-              {!micPermission && (
-                <button
-                  className="mb-2 px-3 py-1 rounded border border-blue-300 text-blue-700 bg-white hover:bg-blue-50 transition font-semibold"
-                  onClick={getMicrophones}
-                >
-                  Show Microphones
-                </button>
-              )}
-              {micPermission && devices.length > 0 && (
-                <select
-                  className="mb-2 px-3 py-1 rounded border border-blue-300 text-blue-700 bg-white"
-                  value={selectedDeviceId}
-                  onChange={e => setSelectedDeviceId(e.target.value)}
-                >
-                  {devices.map((d) => (
-                    <option key={d.deviceId} value={d.deviceId}>{d.label || `Microphone ${d.deviceId}`}</option>
-                  ))}
-                </select>
-              )}
-              {recordFormat && (
-                <span className="text-xs text-gray-500">Recording format: <b>{recordFormat}</b></span>
-              )}
-              <div className="flex gap-3">
-                {!recording ? (
-                  <button
-                    onClick={handleStartRecording}
-                    className="bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 focus:ring-2 focus:ring-pink-200 text-white px-7 py-3 rounded-lg font-semibold shadow-lg flex items-center gap-2 text-lg transition-all duration-200"
-                  >
-                    <FaMicrophone className="text-xl" /> Start Recording
-                  </button>
+            </div>
+          </div>
+
+          {/* Right Column - Results */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 min-h-[600px]">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Analysis Results</h2>
+                
+                {result ? (
+                  <div className="space-y-8">
+                    
+                    {/* Score Overview */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className={`p-4 rounded-xl border ${getFluencyStatus(result.color).color}`}>
+                        <div className="flex items-center space-x-3">
+                          {(() => {
+                            const StatusIcon = getFluencyStatus(result.color).icon;
+                            return <StatusIcon className="w-5 h-5" />;
+                          })()}
+                          <div>
+                            <p className="font-medium">{getFluencyStatus(result.color).text}</p>
+                            <p className="text-sm opacity-80">Overall Assessment</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className={`p-4 rounded-xl border ${getScoreColor(result.cefr_level)}`}>
+                        <div className="flex items-center space-x-3">
+                          <TrendingUp className="w-5 h-5" />
+                          <div>
+                            <p className="font-medium">{result.cefr_level} Level</p>
+                            <p className="text-sm opacity-80">CEFR Rating</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Metrics Grid */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <Clock className="w-5 h-5 text-blue-600" />
+                          <span className="text-2xl font-bold text-blue-900">{result.speech_rate_wpm}</span>
+                        </div>
+                        <p className="text-sm text-blue-700 font-medium">Words per Minute</p>
+                      </div>
+                      
+                      <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <AlertTriangle className="w-5 h-5 text-amber-600" />
+                          <span className="text-2xl font-bold text-amber-900">{result.pauses}</span>
+                        </div>
+                        <p className="text-sm text-amber-700 font-medium">Pauses</p>
+                      </div>
+                      
+                      <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <MessageCircle className="w-5 h-5 text-red-600" />
+                          <span className="text-2xl font-bold text-red-900">{result.filler_count}</span>
+                        </div>
+                        <p className="text-sm text-red-700 font-medium">Filler Words</p>
+                      </div>
+                      
+                      <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <Link className="w-5 h-5 text-green-600" />
+                          <span className="text-2xl font-bold text-green-900">{result.coherence_count}</span>
+                        </div>
+                        <p className="text-sm text-green-700 font-medium">Coherence Links</p>
+                      </div>
+                    </div>
+
+                    {/* Transcript */}
+                    {result.transcript && (
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <FileText className="w-5 h-5 text-gray-600" />
+                          <h3 className="font-medium text-gray-900">Transcript</h3>
+                        </div>
+                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                          <p className="text-gray-700 leading-relaxed">
+                            {result.transcript}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Feedback */}
+                    {result.feedback && result.feedback.length > 0 && (
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Lightbulb className="w-5 h-5 text-gray-600" />
+                          <h3 className="font-medium text-gray-900">Personalized Recommendations</h3>
+                        </div>
+                        <div className="space-y-3">
+                          {result.feedback.map((tip, i) => {
+                            const isPositive = tip.toLowerCase().includes('good') || tip.toLowerCase().includes('excellent');
+                            const isWarning = tip.toLowerCase().includes('avoid') || tip.toLowerCase().includes('reduce');
+                            const colorClass = isPositive 
+                              ? 'bg-green-50 border-green-200 text-green-800' 
+                              : isWarning 
+                              ? 'bg-red-50 border-red-200 text-red-800'
+                              : 'bg-blue-50 border-blue-200 text-blue-800';
+                            
+                            const Icon = isPositive ? CheckCircle : isWarning ? AlertTriangle : Lightbulb;
+                            
+                            return (
+                              <div key={i} className={`flex items-start space-x-3 p-4 rounded-xl border ${colorClass}`}>
+                                <Icon className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm font-medium leading-relaxed">{tip}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : (
-                  <button
-                    onClick={handleStopRecording}
-                    className="bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-600 hover:to-pink-500 focus:ring-2 focus:ring-red-200 text-white px-7 py-3 rounded-lg font-semibold shadow-lg flex items-center gap-2 text-lg animate-pulse transition-all duration-200"
-                  >
-                    <FaStop className="text-xl" /> Stop Recording
-                  </button>
+                  <div className="flex flex-col items-center justify-center h-96 text-gray-400">
+                    <BarChart3 className="w-16 h-16 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-500 mb-2">Ready to analyze your speech</h3>
+                    <p className="text-center text-gray-400 max-w-md">
+                      Upload an audio file or record yourself speaking to get detailed fluency analysis and personalized feedback.
+                    </p>
+                  </div>
                 )}
               </div>
-              {audioURL && (
-                <audio controls src={audioURL} className="mt-2 w-full rounded shadow-lg border border-blue-200" />
-              )}
             </div>
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="sticky bottom-0 w-full bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 focus:ring-2 focus:ring-pink-200 text-white px-8 py-4 rounded-2xl font-bold text-xl shadow-xl transition-all duration-200 mt-2 tracking-wide uppercase disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Analyzing...' : 'Analyze'}
-            </button>
-          </section>
-          {/* Right: Results */}
-          <section className="md:w-1/2 w-full bg-white/80 shadow-2xl rounded-3xl p-8 flex flex-col gap-6 border border-green-200 backdrop-blur-lg justify-center">
-            {result ? (
-              <div className={`p-6 rounded-2xl border-2 shadow-lg text-center ${colorMap[result.color] || 'bg-gray-100 text-gray-700 border-gray-300'}`}>
-                {/* Color-coded badge/banner */}
-                <div className={`flex items-center justify-center gap-2 mb-4 text-2xl font-bold rounded-xl px-4 py-2 w-fit mx-auto
-                  ${result.color === 'green' ? 'bg-green-200 text-green-800' : result.color === 'red' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-800'}`}
-                >
-                  {result.color === 'green' && <FaCheckCircle className="text-green-500" />}
-                  {result.color === 'red' && <FaExclamationTriangle className="text-red-500" />}
-                  {result.color === 'yellow' && <FaLightbulb className="text-yellow-500" />}
-                  {result.color === 'green' ? 'High Fluency' : result.color === 'red' ? 'Low Fluency' : 'Moderate Fluency'}
-                </div>
-                <h2 className={`text-2xl font-bold mb-2 flex items-center justify-center gap-2 ${result.color === 'green' ? 'text-green-600' : result.color === 'red' ? 'text-red-600' : 'text-yellow-600'}`}>
-                  <FaHeadphones /> Speech Rate: <span className="text-3xl">{result.speech_rate_wpm} WPM</span>
-                </h2>
-                <div className="flex flex-wrap justify-center gap-4 my-3">
-                  <div className="flex flex-col items-center"><span className="font-bold text-lg">{result.word_count}</span><span className="text-xs text-gray-500">Words</span></div>
-                  <div className="flex flex-col items-center"><span className="font-bold text-lg">{result.duration_sec}</span><span className="text-xs text-gray-500">Seconds</span></div>
-                  <div className="flex flex-col items-center"><span className="font-bold text-lg">{result.pauses}</span><span className="text-xs text-gray-500">Pauses</span></div>
-                  <div className="flex flex-col items-center"><span className="font-bold text-lg">{result.filler_count}</span><span className="text-xs text-gray-500">Fillers</span></div>
-                  <div className="flex flex-col items-center"><span className="font-bold text-lg">{result.coherence_count}</span><span className="text-xs text-gray-500">Linking Words</span></div>
-                  <div className={`flex flex-col items-center ${result.color === 'green' ? 'text-green-700' : result.color === 'red' ? 'text-red-700' : 'text-yellow-700'}`}><span className="font-bold text-lg">{result.cefr_level}</span><span className="text-xs text-gray-500">CEFR Level</span></div>
-                </div>
-                <div className="mt-3 text-left">
-                  <div className="font-semibold text-blue-700 mb-1">Transcript:</div>
-                  <div className="bg-white/80 rounded p-2 text-gray-700 text-sm border border-blue-100 max-h-32 overflow-y-auto">
-                    {result.transcript}
-                  </div>
-                </div>
-                {/* Actionable feedback */}
-                <div className="mt-4 flex flex-col gap-2">
-                  <div className="font-semibold text-pink-500 mb-1 flex items-center gap-2"><FaLightbulb /> Actionable Insights:</div>
-                  {result.feedback && result.feedback.map((tip, i) => (
-                    <div key={i} className={`flex items-center gap-2 text-base rounded px-2 py-1
-                      ${tip.includes('good') || tip.includes('Good') ? 'bg-green-100 text-green-700' :
-                        tip.includes('avoid') || tip.includes('reduce') || tip.includes('Try') ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-pink-100 text-pink-700'}`}
-                    >
-                      {tip.includes('good') || tip.includes('Good') ? <FaCheckCircle className="text-green-400" /> : <FaExclamationTriangle className="text-yellow-500" />} {tip}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2">
-                <FaHeadphones className="text-5xl mb-2" />
-                <span className="text-lg font-semibold">Your results will appear here after analysis.</span>
-              </div>
-            )}
-          </section>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
-
-export default App; 

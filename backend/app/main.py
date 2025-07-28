@@ -1,12 +1,12 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-import speech_recognition as sr
 import tempfile
 import os
 import subprocess
 import re
 import librosa
 import numpy as np
+import whisper
 
 app = FastAPI()
 
@@ -56,13 +56,14 @@ async def analyze_fluency(file: UploadFile = File(...)):
         os.remove(tmp_path)
         return {"error": f"Audio conversion failed: {str(e)}"}
 
-    # Use SpeechRecognition to transcribe and get duration
-    recognizer = sr.Recognizer()
+    # Use Whisper to transcribe and get duration
     try:
-        with sr.AudioFile(wav_path) as source:
-            audio = recognizer.record(source)
-            duration = source.DURATION  # seconds
-        text = recognizer.recognize_google(audio)
+        model = whisper.load_model("base")
+        result = model.transcribe(wav_path)
+        text = result["text"]
+        # Get duration using librosa
+        y, sr_ = librosa.load(wav_path, sr=None)
+        duration = librosa.get_duration(y=y, sr=sr_)
     except Exception as e:
         os.remove(tmp_path)
         os.remove(wav_path)
@@ -74,7 +75,6 @@ async def analyze_fluency(file: UploadFile = File(...)):
     wpm = word_count / minutes
 
     # Pause/Hesitation Detection (using librosa for silence)
-    y, sr_ = librosa.load(wav_path, sr=None)
     intervals = librosa.effects.split(y, top_db=30)  # non-silent intervals
     total_speech = sum((end - start) for start, end in intervals)
     total_silence = len(y) - total_speech
