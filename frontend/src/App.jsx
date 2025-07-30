@@ -171,11 +171,11 @@ export default function App() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg ring-2 ring-indigo-200/50">
-                  <img src="/favicon.svg" alt="HueSpeak Logo" className="w-full h-full object-cover" />
+                  <img src="/favicon.svg" alt="SpeakEasy Logo" className="w-full h-full object-cover" />
                 </div>
               <div className="flex flex-col items-start">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none mb-0">HueSpeak</h1>
-                <p className="text-sm text-gray-600 mt-0">Improve your English speaking skills</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none mb-0">SpeakEasy</h1>
+                <p className="text-sm text-gray-600 mt-0 italic">"A Safe Space to Speak Freely and Improve Fluency"</p>
               </div>
             </div>
             <div className="flex items-center space-x-2 text-sm text-gray-600">
